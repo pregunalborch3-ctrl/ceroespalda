@@ -1,0 +1,4 @@
+# ads.txt - listo para AdSense.
+# Cuando Google AdSense apruebe el sitio, sustituye esta linea por la que indique tu cuenta.
+# Ejemplo (sustituir por la real):
+# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
