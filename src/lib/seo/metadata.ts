@@ -109,4 +109,7 @@ export const rootMetadata: Metadata = {
   icons: {
     icon: [{ url: "/favicon.ico" }],
   },
+  verification: {
+    google: "N02b3pAZ6Bm4ICpWBykEW77uVVKV-2eFDLgZ42aouqQ",
+  },
 };
