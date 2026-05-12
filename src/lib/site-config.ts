@@ -4,7 +4,7 @@ export const siteConfig = {
   description:
     "Guías prácticas y basadas en evidencia sobre salud postural, dolor de espalda, ergonomía y ejercicios para vivir sin molestias.",
   url:
-    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ||
+    process.env.NEXT_PUBLIC_SITE_URL?.trim().replace(/\/$/, "") ||
     "https://ceroespalda.com",
   locale: "es-ES",
   language: "es",
