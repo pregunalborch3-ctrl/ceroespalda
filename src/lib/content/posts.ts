@@ -38,6 +38,8 @@ function readPostFile(filename: string): Post {
     author: fm.author ?? siteConfig.author.name,
     cover: fm.cover,
     coverAlt: fm.coverAlt,
+    coverCredit: fm.coverCredit,
+    coverCreditUrl: fm.coverCreditUrl,
     featured: fm.featured ?? false,
     draft: fm.draft ?? false,
     readingTimeMinutes: reading.minutes,

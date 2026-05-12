@@ -8,6 +8,8 @@ export interface PostFrontmatter {
   author?: string;
   cover?: string;
   coverAlt?: string;
+  coverCredit?: string;
+  coverCreditUrl?: string;
   featured?: boolean;
   draft?: boolean;
 }
@@ -23,6 +25,8 @@ export interface PostMeta {
   author: string;
   cover?: string;
   coverAlt?: string;
+  coverCredit?: string;
+  coverCreditUrl?: string;
   featured: boolean;
   draft: boolean;
   readingTimeMinutes: number;

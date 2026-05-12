@@ -144,16 +144,44 @@ export default async function ArticlePage({
           </header>
 
           {post.cover ? (
-            <div className="mx-auto mt-8 aspect-[16/9] max-w-4xl overflow-hidden rounded-xl border bg-muted">
-              <Image
-                src={post.cover}
-                alt={post.coverAlt ?? post.title}
-                width={1600}
-                height={900}
-                priority
-                sizes="(min-width: 1024px) 960px, 100vw"
-                className="h-full w-full object-cover"
-              />
+            <div className="mx-auto mt-8 max-w-4xl">
+              <div className="aspect-[16/9] overflow-hidden rounded-xl border bg-muted">
+                <Image
+                  src={post.cover}
+                  alt={post.coverAlt ?? post.title}
+                  width={1600}
+                  height={900}
+                  priority
+                  sizes="(min-width: 1024px) 960px, 100vw"
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              {post.coverCredit ? (
+                <p className="mt-1.5 text-right text-xs text-muted-foreground/60">
+                  Foto:{" "}
+                  {post.coverCreditUrl ? (
+                    <a
+                      href={post.coverCreditUrl}
+                      target="_blank"
+                      rel="noopener noreferrer nofollow"
+                      className="hover:text-muted-foreground underline-offset-2 hover:underline"
+                    >
+                      {post.coverCredit}
+                    </a>
+                  ) : (
+                    post.coverCredit
+                  )}{" "}
+                  /{" "}
+                  <a
+                    href="https://unsplash.com"
+                    target="_blank"
+                    rel="noopener noreferrer nofollow"
+                    className="hover:text-muted-foreground hover:underline"
+                  >
+                    Unsplash
+                  </a>
+                </p>
+              ) : null}
             </div>
           ) : null}
         </Container>
