@@ -23,6 +23,7 @@ if (!ACCESS_KEY) {
 
 // Mapeo slug -> query en inglés (Unsplash funciona mucho mejor en inglés).
 const SLUG_QUERIES = {
+  // Batch original (19 artículos)
   "aliviar-dolor-lumbar-en-casa": "lower back pain relief home",
   "postura-correcta-frente-al-ordenador": "ergonomic desk posture computer",
   "estiramientos-cervicales-oficina": "neck stretch office worker",
@@ -32,7 +33,7 @@ const SLUG_QUERIES = {
   "dolor-cuello-trapecio-movil": "neck pain smartphone phone",
   "como-sentarse-correctamente-ordenador": "ergonomic workspace desk",
   "estiramientos-espalda-antes-dormir": "stretching bedroom evening relax",
-  "hernia-discal-lumbar-sintomas-tratamiento": "spine anatomy back model",
+  "hernia-discal-lumbar-sintomas-tratamiento": "back pain physiotherapy treatment",
   "mejor-silla-ergonomica-dolor-espalda": "modern ergonomic office chair",
   "cervicalgia-que-es-tratamiento-casa": "neck pain woman tension",
   "mejor-colchon-dolor-espalda": "comfortable mattress bedroom",
@@ -42,6 +43,48 @@ const SLUG_QUERIES = {
   "mejor-cojin-lumbar-silla-oficina": "office chair home setup",
   "dolor-espalda-al-despertar-colchon": "morning wake up bed",
   "postura-correcta-al-caminar": "walking park person outdoor",
+
+  // Batch 40 artículos nuevos
+  "movilidad-toracica-ejercicios": "thoracic spine mobility exercise",
+  "pilates-para-la-espalda": "pilates exercise core workout",
+  "yoga-para-la-espalda": "yoga back stretch woman mat",
+  "natacion-espalda-beneficios": "swimming pool backstroke water",
+  "dolor-espalda-embarazo": "pregnancy back pain woman",
+  "lumbalgia-cronica-tratamiento": "chronic back pain physiotherapy",
+  "estenosis-espinal-lumbar": "spine doctor consultation elderly",
+  "espondiloartrosis-lumbar": "spine anatomy lumbar vertebrae",
+  "ciatica-ejercicios-alivio": "sciatic nerve pain leg stretch",
+  "sindrome-piriforme-ciatica": "hip piriformis stretch exercise",
+  "dolor-lumbar-lado-izquierdo": "lower back pain side adult",
+  "dolor-dorsal-zona-media-espalda": "upper back pain mid spine",
+  "cervicalgia-cronica-causas": "chronic neck pain cervical spine",
+  "cefalea-tensional-cervical": "tension headache neck woman",
+  "vertigo-cervical-ejercicios": "vertigo dizziness balance woman",
+  "bruxismo-tension-cuello": "jaw tension headache stress",
+  "tortícolis-causas-remedios": "stiff neck torticollis pain",
+  "estiramientos-psoas-cadera": "hip flexor stretch lunge exercise",
+  "foam-roller-espalda": "foam roller back exercise recovery",
+  "dolor-espalda-al-correr": "runner back pain jogging",
+  "dolor-espalda-despues-deporte": "sports injury back pain recovery",
+  "dolor-espalda-trabajar-de-pie": "standing work fatigue back",
+  "hipopresivos-espalda": "core exercise breathing abdominal",
+  "marcha-nordica-espalda": "nordic walking poles park outdoor",
+  "ejercicios-gluteos-para-espalda": "glute bridge exercise floor workout",
+  "cifosis-dorsal-tratamiento": "kyphosis posture correction exercise",
+  "hiperlordosis-lumbar-ejercicios": "lumbar lordosis posture exercise",
+  "postura-al-dormir-espalda": "sleeping position side pillow",
+  "postura-conducir-coche": "driver car seat ergonomic posture",
+  "tecnica-levantar-peso": "proper lifting technique heavy box",
+  "escritorio-de-pie-beneficios": "standing desk home office work",
+  "reposapies-ergonomia": "footrest ergonomic office desk",
+  "teclado-ergonomico-cual-elegir": "ergonomic keyboard split curved",
+  "raton-vertical-ergonomico": "vertical ergonomic mouse wrist",
+  "monitor-altura-ergonomia": "monitor height ergonomic eye level",
+  "almohada-cervical-cual-elegir": "cervical pillow neck support ergonomic",
+  "soporte-lumbar-coche": "lumbar support car seat cushion",
+  "faja-lumbar-cuando-usarla": "lumbar belt support orthopaedic",
+  "colchon-latex-vs-viscoelastica": "mattress latex memory foam bed",
+  "plantillas-ortopedicas-espalda": "orthopedic insoles shoe support",
 };
 
 function readFrontmatter(raw) {
@@ -72,6 +115,15 @@ function injectCover(raw, coverPath) {
   }
 
   return raw.replace(fmFull, `---\n${newFm}\n---`);
+}
+
+async function imageExists(slug) {
+  try {
+    await fs.access(path.join(IMAGES_DIR, `${slug}.jpg`));
+    return true;
+  } catch {
+    return false;
+  }
 }
 
 async function searchUnsplash(query) {
@@ -126,8 +178,10 @@ async function processPost(filename) {
     return null;
   }
 
-  if (hasCover(parsed.fm)) {
-    console.log(`⏭  ${slug} ya tiene cover, saltando`);
+  // Saltar solo si ya tiene cover Y el archivo de imagen existe en disco
+  const imgExists = await imageExists(slug);
+  if (hasCover(parsed.fm) && imgExists) {
+    console.log(`⏭  ${slug} ya tiene cover e imagen, saltando`);
     return null;
   }
 
@@ -148,9 +202,12 @@ async function processPost(filename) {
   await triggerDownload(photo.links.download_location);
   console.log(`   ✅ ${slug}.jpg descargada (por ${photo.user.name})`);
 
-  const newContent = injectCover(raw, `/images/posts/${slug}.jpg`);
-  await fs.writeFile(filepath, newContent, "utf8");
-  console.log(`   ✏  frontmatter actualizado`);
+  // Solo actualizar frontmatter si no tiene cover aún
+  if (!hasCover(parsed.fm)) {
+    const newContent = injectCover(raw, `/images/posts/${slug}.jpg`);
+    await fs.writeFile(filepath, newContent, "utf8");
+    console.log(`   ✏  frontmatter actualizado`);
+  }
 
   return {
     slug,
