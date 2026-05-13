@@ -56,7 +56,7 @@ const SLUG_QUERIES = {
   "ciatica-ejercicios-alivio": "sciatic nerve pain leg stretch",
   "sindrome-piriforme-ciatica": "hip piriformis stretch exercise",
   "dolor-lumbar-lado-izquierdo": "lower back pain side adult",
-  "dolor-dorsal-zona-media-espalda": "upper back pain mid spine",
+  "dolor-dorsal-zona-media-espalda": "back pain upper middle spine woman",
   "cervicalgia-cronica-causas": "chronic neck pain cervical spine",
   "cefalea-tensional-cervical": "tension headache neck woman",
   "vertigo-cervical-ejercicios": "vertigo dizziness balance woman",
