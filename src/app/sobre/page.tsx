@@ -227,10 +227,10 @@ export default function SobrePage() {
             <p className="mt-4 flex items-center gap-2 font-medium text-primary">
               <Mail className="h-4 w-4" aria-hidden />
               <a
-                href="mailto:pregunalborch3@gmail.com"
+                href="mailto:ceroespalda@gmail.com"
                 className="hover:underline"
               >
-                pregunalborch3@gmail.com
+                ceroespalda@gmail.com
               </a>
             </p>
             <div className="mt-5 flex flex-wrap gap-3">
