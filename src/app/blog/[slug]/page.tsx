@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 
 import {
   getAllSlugs,
+  getNextPostInCategory,
   getPostBySlug,
   getRelatedPosts,
 } from "@/lib/content/posts";
@@ -18,6 +19,9 @@ import { Breadcrumbs } from "@/components/blog/breadcrumbs";
 import { ArticleMeta } from "@/components/blog/article-meta";
 import { ArticleToc } from "@/components/blog/article-toc";
 import { RelatedArticles } from "@/components/blog/related-articles";
+import { ReadingProgress } from "@/components/blog/reading-progress";
+import { ScrollToTop } from "@/components/blog/scroll-to-top";
+import { NextArticle } from "@/components/blog/next-article";
 import { AdSlot } from "@/components/ads/ad-slot";
 import { JsonLd } from "@/components/seo/json-ld";
 
@@ -66,6 +70,7 @@ export default async function ArticlePage({
   const toc = extractToc(post.content);
   const compiled = await renderMdx(post.content, mdxComponents);
   const related = getRelatedPosts(slug, 3);
+  const nextPost = getNextPostInCategory(slug);
 
   const meta = {
     slug: post.slug,
@@ -118,6 +123,7 @@ export default async function ArticlePage({
       </Container>
 
       <article>
+        <ReadingProgress />
         <Container className="pb-8 pt-2">
           <header className="mx-auto max-w-3xl">
             <div className="flex flex-wrap items-center gap-3">
@@ -216,8 +222,10 @@ export default async function ArticlePage({
         </Container>
 
         <Container className="pb-16">
-          <RelatedArticles posts={related} />
+          <RelatedArticles posts={related} currentCategory={post.category} />
+          <NextArticle nextPost={nextPost} />
         </Container>
+        <ScrollToTop />
       </article>
     </>
   );

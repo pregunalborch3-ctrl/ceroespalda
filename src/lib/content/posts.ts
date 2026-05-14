@@ -91,19 +91,69 @@ export const getRecentPosts = cache((limit = 6): PostMeta[] => {
 
 export const getRelatedPosts = cache(
   (slug: string, limit = 3): PostMeta[] => {
-    const current = getAllPosts().find((p) => p.slug === slug);
+    const all = getAllPosts();
+    const current = all.find((p) => p.slug === slug);
     if (!current) return [];
-    const sameCat = getAllPosts().filter(
-      (p) => p.slug !== slug && p.category === current.category,
-    );
-    if (sameCat.length >= limit) return sameCat.slice(0, limit);
-    const rest = getAllPosts().filter(
-      (p) => p.slug !== slug && p.category !== current.category,
-    );
-    return [...sameCat, ...rest].slice(0, limit);
+
+    const currentDate = new Date(current.publishedAt);
+
+    return all
+      .filter((p) => p.slug !== slug)
+      .map((p) => {
+        let score = 0;
+
+        // +10 por cada tag compartido
+        const sharedTags = p.tags.filter((t) => current.tags.includes(t));
+        score += sharedTags.length * 10;
+
+        // +5 si es la misma categoría
+        if (p.category === current.category) score += 5;
+
+        // -1 por cada mes de diferencia (preferir recientes)
+        const diffMs = Math.abs(
+          currentDate.getTime() - new Date(p.publishedAt).getTime(),
+        );
+        const diffMonths = diffMs / (1000 * 60 * 60 * 24 * 30);
+        score -= Math.floor(diffMonths);
+
+        return { post: p, score };
+      })
+      .sort((a, b) => b.score - a.score)
+      .slice(0, limit)
+      .map(({ post }) => post);
+  },
+);
+
+export const getNextPostInCategory = cache(
+  (slug: string): PostMeta | null => {
+    const posts = getAllPosts();
+    const current = posts.find((p) => p.slug === slug);
+    if (!current) return null;
+    const sameCat = posts.filter((p) => p.category === current.category);
+    const idx = sameCat.findIndex((p) => p.slug === slug);
+    // sameCat está ordenado por fecha desc → "siguiente" = el anterior en el array (más antiguo)
+    // pero queremos el siguiente publicado después, así que cogemos idx+1
+    return sameCat[idx + 1] ?? null;
   },
 );
 
 export const getAllSlugs = cache((): string[] => {
   return getAllPosts().map((p) => p.slug);
 });
+
+// Obtener todos los tags únicos de una categoría
+export const getTagsByCategory = cache((categorySlug: string): string[] => {
+  const posts = getPostsByCategory(categorySlug);
+  const tagSet = new Set<string>();
+  posts.forEach((p) => p.tags.forEach((t) => tagSet.add(t)));
+  return Array.from(tagSet).sort();
+});
+
+// Filtrar posts de una categoría por tag
+export const getPostsByCategoryAndTag = cache(
+  (categorySlug: string, tag: string | null): PostMeta[] => {
+    const posts = getPostsByCategory(categorySlug);
+    if (!tag) return posts;
+    return posts.filter((p) => p.tags.includes(tag));
+  },
+);

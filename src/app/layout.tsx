@@ -7,6 +7,8 @@ import { rootMetadata } from "@/lib/seo/metadata";
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { CookieBanner } from "@/components/consent/cookie-banner";
+import { ReadingProgress } from "@/components/blog/reading-progress";
+import { ScrollToTop } from "@/components/blog/scroll-to-top";
 import { JsonLd } from "@/components/seo/json-ld";
 import { organizationSchema, websiteSchema } from "@/lib/seo/schema";
 
@@ -51,8 +53,18 @@ export default function RootLayout({
           src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`}
           crossOrigin="anonymous"
         />
+        {/* Preconnect a orígenes externos para mejorar LCP */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link rel="preconnect" href="https://pagead2.googlesyndication.com" />
+        <link rel="dns-prefetch" href="https://images.unsplash.com" />
       </head>
       <body className="flex min-h-full flex-col bg-background font-sans text-foreground">
+        <ReadingProgress />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-primary focus:px-3 focus:py-2 focus:text-primary-foreground"
@@ -64,6 +76,7 @@ export default function RootLayout({
           {children}
         </main>
         <SiteFooter />
+        <ScrollToTop />
         <CookieBanner />
         <JsonLd data={[organizationSchema(), websiteSchema()]} />
       </body>

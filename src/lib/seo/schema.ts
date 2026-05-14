@@ -80,6 +80,7 @@ export function collectionPageSchema(args: {
   title: string;
   description: string;
   url: string;
+  posts?: Array<{ title: string; url: string; datePublished: string }>;
 }) {
   return {
     "@context": "https://schema.org",
@@ -89,5 +90,14 @@ export function collectionPageSchema(args: {
     url: absoluteUrl(args.url),
     inLanguage: siteConfig.locale,
     isPartOf: { "@id": `${siteConfig.url}#website` },
+    ...(args.posts && {
+      numberOfItems: args.posts.length,
+      itemListElement: args.posts.slice(0, 10).map((p, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        name: p.title,
+        url: absoluteUrl(p.url),
+      })),
+    }),
   };
 }
