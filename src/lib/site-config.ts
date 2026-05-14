@@ -51,7 +51,8 @@ export const siteConfig = {
 
   adsense: {
     enabled: process.env.NEXT_PUBLIC_ADSENSE_ENABLED === "true",
-    clientId: process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || "",
+    clientId:
+      process.env.NEXT_PUBLIC_ADSENSE_CLIENT_ID || "ca-pub-1828824041245954",
   },
 } as const;
 

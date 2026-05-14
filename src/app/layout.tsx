@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 import { siteConfig } from "@/lib/site-config";
@@ -55,6 +56,14 @@ export default function RootLayout({
         <SiteFooter />
         <CookieBanner />
         <JsonLd data={[organizationSchema(), websiteSchema()]} />
+        {siteConfig.adsense.enabled && siteConfig.adsense.clientId && (
+          <Script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${siteConfig.adsense.clientId}`}
+            crossOrigin="anonymous"
+            strategy="afterInteractive"
+          />
+        )}
       </body>
     </html>
   );
