@@ -1,6 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import Script from "next/script";
 import "./globals.css";
 
 import { siteConfig } from "@/lib/site-config";
@@ -34,6 +33,8 @@ export const viewport: Viewport = {
   ],
 };
 
+const ADSENSE_CLIENT_ID = "ca-pub-1828824041245954";
+
 export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
@@ -42,6 +43,15 @@ export default function RootLayout({
       lang={siteConfig.language}
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      {/* AdSense: script en <head> para que el crawler de Google lo detecte en el HTML estático */}
+      <head>
+        {/* eslint-disable-next-line @next/next/no-sync-scripts */}
+        <script
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT_ID}`}
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className="flex min-h-full flex-col bg-background font-sans text-foreground">
         <a
           href="#main"
@@ -56,14 +66,6 @@ export default function RootLayout({
         <SiteFooter />
         <CookieBanner />
         <JsonLd data={[organizationSchema(), websiteSchema()]} />
-        {siteConfig.adsense.enabled && siteConfig.adsense.clientId && (
-          <Script
-            async
-            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${siteConfig.adsense.clientId}`}
-            crossOrigin="anonymous"
-            strategy="afterInteractive"
-          />
-        )}
       </body>
     </html>
   );
