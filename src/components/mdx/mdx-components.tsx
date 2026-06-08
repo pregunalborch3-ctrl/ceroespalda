@@ -5,6 +5,7 @@ import { Callout } from "./callout";
 import { MdxImage } from "./mdx-image";
 import { MedicalDisclaimer } from "./medical-disclaimer";
 import { InArticleAd } from "@/components/ads/in-article-ad";
+import { FAQ } from "./faq";
 
 function MdxLink(props: AnchorHTMLAttributes<HTMLAnchorElement>) {
   const href = props.href ?? "";
@@ -42,4 +43,5 @@ export const mdxComponents: MDXComponents = {
   MdxImage,
   MedicalDisclaimer,
   InArticleAd,
+  FAQ,
 };
